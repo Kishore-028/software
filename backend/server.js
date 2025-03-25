@@ -35,7 +35,7 @@ app.use("/orders", orderRoutes);
 app.use("/upload", uploadRoutes);
 app.use("/cart", cartRoutes);
 app.use("/profile",profileRoutes);
-app.use("/api",analyticRoutes);
+//app.use("/api",analyticRoutes);
 
 
 // Start Server
