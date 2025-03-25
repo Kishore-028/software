@@ -1,28 +1,48 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token); 
+  }, []);
+
+  const handleAuthAction = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem("token");
+      setIsLoggedIn(false);
+      navigate("/");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <div style={styles.container}>
       {/* Navbar */}
       <div style={styles.navbar}>
         <div style={styles.logoContainer}>
-          <img src="/logo.png" alt="Kore Connect Logo" style={styles.logo} />
-          <h1 style={styles.brandName}>Kore Connect</h1>
+          <img src="/logo.jpg" alt="Kore Connect Logo" style={styles.logo} />
+          <h1 style={styles.brandName}>Kore Konnect</h1>
         </div>
         <div style={styles.navLinks}>
           <button style={styles.navButton} onClick={() => navigate("/core/home")}>Home</button>
-          {/* Always Show Login Button */}
-          <button style={styles.navButton} onClick={() => navigate("/core/login")}>Login</button>
-          <button style={styles.navButton} onClick={() => navigate("/core/signup")}>Signup</button>
+          <button style={styles.navButton} onClick={() => navigate("/core/menu")}>Menu</button>
           <button style={styles.navButton} onClick={() => navigate("/core/contact")}>Contact</button>
+          
+          {/* Dynamic Login/Logout Button */}
+          <button style={styles.navButton} onClick={handleAuthAction}>
+            {isLoggedIn ? "Logout" : "Login"}
+          </button>
         </div>
       </div>
 
       {/* Main Content */}
       <div style={styles.mainContent}>
-        <h2 style={styles.welcomeHeading}>Welcome to Kore Connect</h2>
+        <h2 style={styles.welcomeHeading}>Welcome to Kore Konnect</h2>
         <p style={styles.description}>
           Your go-to platform for hassle-free canteen food ordering! Browse the menu, 
           place your order, and enjoy delicious meals without the wait.
@@ -34,30 +54,30 @@ const Home = () => {
 
       {/* Footer */}
       <footer style={styles.footer}>
-        © 2025 Part +-ner Kore. All rights reserved.
+        © 2025 Kore. All rights reserved.
       </footer>
     </div>
   );
 };
 
-// Styles (unchanged)
+// Updated Styles
 const styles = {
   container: {
-    fontFamily: "Arial, sans-serif",
+    fontFamily: "'Poppins', sans-serif",
     textAlign: "center",
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
+    backgroundColor: "#F9F7F7",
   },
   navbar: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     padding: "15px 30px",
-    background: "#ff6f61",
-    borderBottomLeftRadius: "20px",
-    borderBottomRightRadius: "20px",
+    background: "#112D4E",
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
   },
   logoContainer: {
     display: "flex",
@@ -70,7 +90,7 @@ const styles = {
     marginRight: "10px",
   },
   brandName: {
-    color: "white",
+    color: "#FFFFFF",
     fontSize: "22px",
     fontWeight: "bold",
   },
@@ -81,11 +101,12 @@ const styles = {
   navButton: {
     background: "transparent",
     border: "none",
-    color: "white",
+    color: "#FFFFFF",
     fontSize: "16px",
     cursor: "pointer",
     textTransform: "capitalize",
     fontWeight: "bold",
+    transition: "color 0.3s ease",
   },
   mainContent: {
     padding: "50px 20px",
@@ -93,31 +114,32 @@ const styles = {
     margin: "0 auto",
   },
   welcomeHeading: {
-    fontSize: "28px",
+    fontSize: "32px",
     fontWeight: "bold",
-    color: "#333",
+    color: "#112D4E",
+    marginBottom: "20px",
   },
   description: {
     fontSize: "16px",
-    color: "#555",
+    color: "#3F72AF",
     marginBottom: "20px",
   },
   getStartedButton: {
-    background: "blue",
-    color: "white",
+    background: "#3F72AF",
+    color: "#FFFFFF",
     padding: "12px 25px",
     fontSize: "18px",
     border: "none",
     borderRadius: "8px",
     cursor: "pointer",
+    transition: "background-color 0.3s ease",
   },
   footer: {
     padding: "15px",
-    background: "#ff6f61",
-    color: "white",
+    background: "#112D4E",
+    color: "#FFFFFF",
     fontSize: "14px",
-    borderTopLeftRadius: "20px",
-    borderTopRightRadius: "20px",
+    boxShadow: "0px -4px 10px rgba(0, 0, 0, 0.1)",
   },
 };
 
