@@ -8,27 +8,29 @@ const styles = {
     alignItems: "center",
     width: "100%",
     minHeight: "100vh",
-    backgroundColor: "#f8fafc", // Soft background color
+    backgroundColor: "#f5f5f7", // Light gray background for a clean look
     paddingTop: "2rem",
+    fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", // Modern typography
   },
   contentWrapper: {
     width: "90%",
     maxWidth: "1000px",
     backgroundColor: "#ffffff",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)", // Softer shadow
-    borderRadius: "12px", // Rounded corners
+    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1)", // Subtle shadow for depth
+    borderRadius: "10px", // Rounded corners as in the image
     padding: "2rem",
     marginTop: "1.5rem",
+    marginBottom: "2rem",
     transition: "box-shadow 0.3s ease", // Smooth hover effect
     ":hover": {
-      boxShadow: "0 6px 16px rgba(0, 0, 0, 0.12)", // Enhanced shadow on hover
+      boxShadow: "0 6px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.12)", // Enhanced shadow on hover
     },
   },
   title: {
     fontSize: "2rem",
     fontWeight: "700",
     marginBottom: "1.5rem",
-    color: "#1e293b", // Darker text for better contrast
+    color: "#1d1d1f", // Dark text for contrast
     textAlign: "center",
     letterSpacing: "-0.5px", // Slight letter spacing for elegance
   },
@@ -38,7 +40,7 @@ const styles = {
     gap: "1rem",
   },
   orderCard: {
-    border: "1px solid #e2e8f0", // Softer border color
+    border: "1px solid #e8ecef", // Light border as in the image
     padding: "1.5rem",
     borderRadius: "8px",
     backgroundColor: "#ffffff",
@@ -47,40 +49,39 @@ const styles = {
     ":hover": {
       transform: "translateY(-4px)", // Lift effect on hover
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)", // Enhanced shadow on hover
-      borderColor: "#cbd5e1", // Slight border color change
+      borderColor: "#d2d6dc", // Slight border color change
     },
   },
   orderText: {
     fontSize: "1.25rem",
     fontWeight: "600",
-    color: "#1e293b", // Darker text for better readability
+    color: "#1d1d1f", // Dark text for readability
     marginBottom: "0.5rem",
   },
   statusText: {
     fontSize: "1rem",
-    color: "#64748b", // Muted text color
-    fontStyle: "italic",
+    color: "#6e6e73", // Muted gray for secondary text
     marginBottom: "0.5rem",
   },
   link: {
     fontSize: "0.875rem",
-    color: "#2563eb", // Blue link color
+    color: "#007aff", // Apple’s blue for links
     textDecoration: "none",
     cursor: "pointer",
     marginTop: "0.5rem",
     display: "inline-block",
-    fontWeight: "600",
+    fontWeight: "500",
     transition: "color 0.2s ease", // Smooth color transition
     ":hover": {
-      color: "#1d4ed8", // Darker blue on hover
+      color: "#005bb5", // Darker blue on hover
       textDecoration: "underline", // Underline on hover
     },
   },
   noOrdersText: {
     textAlign: "center",
-    color: "#64748b", // Muted text color
+    color: "#6e6e73", // Muted text color
     fontSize: "1rem",
-    fontStyle: "italic",
+    padding: "2rem 0",
   },
 };
 
@@ -94,9 +95,15 @@ const Dashboard = () => {
       .catch((error) => console.error("Error fetching orders:", error));
   }, []);
 
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    sessionStorage.clear();
+    window.location.href = "/core/home";
+  };
+
   return (
     <div style={styles.pageContainer}>
-      <Layout />
+      <Layout handleLogout={handleLogout} />
       <div style={styles.contentWrapper}>
         <h1 style={styles.title}>Order Management Dashboard</h1>
         <div style={styles.orderList}>

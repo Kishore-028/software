@@ -50,7 +50,7 @@ const Login = ({ setIsAuthenticated }) => {
       
 
       if (role === "admin") {
-        navigate("/core/admin/dashboard");
+        navigate("/core/admin/home");
       } else {
         navigate("/core/user/home");
       }

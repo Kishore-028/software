@@ -8,27 +8,16 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [menuItems, setMenuItems] = useState([]);
-  const [images, setImages] = useState([]);
 
   // Fetch menu items from MongoDB (backend)
   useEffect(() => {
     axios
-      .get("http://localhost:5000/menus/getmenu") // Replace with your actual API URL
+      .get("http://localhost:5000/menus/getmenu")
       .then((response) => {
         setMenuItems(response.data);
       })
       .catch((error) => {
         console.error("Error fetching menu data:", error);
-      });
-
-    // Fetch images from the backend
-    axios
-      .get("http://localhost:5000/images")
-      .then((response) => {
-        setImages(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching images:", error);
       });
   }, []);
 
@@ -39,14 +28,6 @@ const Menu = () => {
     }
     return `http://localhost:5000${imageUrl}`;
   };
-  const fetchMenus = async () => {
-    try {
-        const response = await axios.get("http://localhost:5000/menus");
-        console.log("Menus fetched successfully:", response.data);
-    } catch (error) {
-        console.error("Error fetching menus:", error);
-    }
-};
 
   // Filter menu items based on category and search query
   const filteredItems = menuItems.filter(
@@ -92,7 +73,11 @@ const Menu = () => {
         <div style={styles.grid}>
           {filteredItems.map((item) => (
             <div key={item._id} style={styles.card}>
-              <img src={getImageUrl(item.imageUrl)} alt={item.name} style={styles.image} />
+              <img
+                src={getImageUrl(item.imageUrl)}
+                alt={item.name}
+                style={styles.image}
+              />
               <h3>{item.name}</h3>
               <p>₹ {item.price}</p>
               <p>Category: {item.category}</p>
@@ -101,21 +86,12 @@ const Menu = () => {
             </div>
           ))}
         </div>
-
-        {/* Images Grid */}
-        <div style={styles.imagesGrid}>
-          {images.map((image) => (
-            <div key={image._id} style={styles.imageCard}>
-              <img src={getImageUrl(image.imageUrl)} alt="Uploaded" style={styles.uploadedImage} />
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
 };
 
-// Inline CSS Styles
+// Inline CSS Styles (unchanged)
 const styles = {
   container: {
     textAlign: "center",
@@ -184,24 +160,6 @@ const styles = {
     borderRadius: "5px",
     border: "none",
     cursor: "pointer",
-  },
-  imagesGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-    gap: "20px",
-    marginTop: "20px",
-  },
-  imageCard: {
-    border: "1px solid #ccc",
-    borderRadius: "5px",
-    padding: "10px",
-    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
-  },
-  uploadedImage: {
-    width: "100%",
-    height: "150px",
-    objectFit: "cover",
-    borderRadius: "5px",
   },
 };
 

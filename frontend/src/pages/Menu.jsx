@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Layout from "./Layout";
+import Lay from "./Layout1";
 
 const categories = ["All", "Vegetarian", "Non-Vegetarian", "Desserts"];
 
@@ -61,6 +62,7 @@ const Menu = () => {
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
       <Layout />
+      <Lay >
       <h1>Canteen Menu</h1>
       <input
         type="text"
@@ -125,9 +127,11 @@ const Menu = () => {
             >
               Add to Cart
             </button>
+            
           </div>
         ))}
       </div>
+      </Lay>
     </div>
   );
 };

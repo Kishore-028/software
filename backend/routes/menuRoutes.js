@@ -50,6 +50,15 @@ router.post("/addmenu", upload.single("file"), async (req, res) => {
   }
 });
 
+// Example in Express
+router.get('/images', (req, res) => {
+  // Logic to fetch images from database or filesystem
+  // Example with MongoDB:
+  ImageModel.find()
+    .then(images => res.json(images))
+    .catch(err => res.status(500).json({ error: err.message }));
+});
+
 
 // ✅ 3. Update an Existing Menu
 router.put("/:id", async (req, res) => {

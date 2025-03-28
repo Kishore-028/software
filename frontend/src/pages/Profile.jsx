@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Layout from "./Layout";
+import Lay from "./Layout1";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -49,7 +50,9 @@ const Profile = () => {
 
   return (
     <div style={styles.container}>
+      
       <Layout />
+      <Lay>
       <div style={styles.content}>
         <h1 style={styles.heading}>Profile</h1>
         <p style={styles.description}>Manage your account details and view order history.</p>
@@ -122,6 +125,7 @@ const Profile = () => {
           </table>
         )}
       </div>
+      </Lay>
     </div>
   );
 };

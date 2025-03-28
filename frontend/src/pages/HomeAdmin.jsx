@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Layout from "./LayoutAdmin";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -10,6 +10,7 @@ const HomeAdmin = () => {
   const [menuData, setMenuData] = useState({ name: "", price: "", category: "", stock: "" });
   const [editingMenu, setEditingMenu] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchMenus();
@@ -109,55 +110,372 @@ const HomeAdmin = () => {
     }
   };
 
+  const updateURL = (path) => {
+    navigate(`/core/admin/${path}`);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    sessionStorage.clear();
+    navigate("/core/home", { replace: true });
+    window.history.pushState(null, "", window.location.href);
+    window.addEventListener("popstate", function () {
+      navigate("/core/home", { replace: true });
+    });
+  };
+
+  const styles = `
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px !important;
+      }
+      .main-content {
+        padding: 15px !important;
+      }
+      .form-section, .menu-list-section {
+        padding: 15px !important;
+      }
+      table {
+        font-size: 12px !important;
+      }
+      img {
+        width: 40px !important;
+        height: 40px !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar {
+        width: 100% !important;
+        position: static !important;
+      }
+      .main-content {
+        padding: 10px !important;
+      }
+      .form-section, .menu-list-section {
+        padding: 10px !important;
+      }
+      table {
+        font-size: 10px !important;
+      }
+      img {
+        width: 30px !important;
+        height: 30px !important;
+      }
+    }
+  `;
+
   return (
-    <div className="text-center">
-      <Layout />
-      <h1>Manage Menus</h1>
+    <div>
+      <style>{styles}</style>
+      <div style={{ display: "flex", minHeight: "100vh", fontFamily: "Arial, sans-serif" }}>
+        {/* Sidebar */}
+        <div className="sidebar" style={{
+          width: "250px",
+          backgroundColor: "#2c3e50",
+          color: "#fff",
+          padding: "20px",
+          boxSizing: "border-box",
+          boxShadow: "2px 0 5px rgba(0, 0, 0, 0.1)",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "30px" }}>
+            <svg style={{ width: "30px", height: "30px", fill: "#f39c12", marginRight: "10px" }} viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14h-1v6l5.2 3.2.8-1.3-4-2.6V6z" />
+            </svg>
+            <h2 style={{ fontSize: "20px", margin: 0 }}>Food</h2>
+          </div>
+          <ul style={{ listStyleType: "none", padding: 0 }}>
+            <li
+              style={{
+                padding: "10px 15px",
+                backgroundColor: "#f39c12",
+                borderRadius: "5px",
+                marginBottom: "10px",
+                fontWeight: "bold",
+                cursor: "pointer",
+              }}
+              onClick={() => updateURL("home")}
+            >
+              Home
+            </li>
+            <li
+              style={{ padding: "10px 15px", color: "#bdc3c7", marginBottom: "10px", cursor: "pointer" }}
+              onClick={() => updateURL("vendormenu")}
+            >
+              Menu
+            </li>
+            <li
+              style={{ padding: "10px 15px", color: "#bdc3c7", marginBottom: "10px", cursor: "pointer" }}
+              onClick={() => updateURL("dashboard")}
+            >
+              Dashboard
+            </li>
+            <li
+              style={{ padding: "10px 15px", color: "#bdc3c7", marginBottom: "10px", cursor: "pointer" }}
+              onClick={() => updateURL("analytics")}
+            >
+              Analytics
+            </li>
+          </ul>
+        </div>
 
-      <input type="file" accept="image/*" onChange={handleFileChange} />
-      <input type="text" name="name" placeholder="Name" value={menuData.name} onChange={handleInputChange} />
-      <input type="number" name="price" placeholder="Price" value={menuData.price} onChange={handleInputChange} />
-      <input type="text" name="category" placeholder="Category" value={menuData.category} onChange={handleInputChange} />
-      <input type="number" name="stock" placeholder="Stock" value={menuData.stock} onChange={handleInputChange} />
-      
-      {editingMenu ? (
-        <button onClick={handleUpdate} disabled={loading}>{loading ? "Updating..." : "Update Menu"}</button>
-      ) : (
-        <button onClick={handleUpload} disabled={loading}>{loading ? "Adding..." : "Add Menu"}</button>
-      )}
-
-      <h2>Menu List</h2>
-      {loading && <p>Loading menus...</p>}
-      <ul style={{ listStyleType: "none", padding: 0 }}>
-        {menus.map((menu) => (
-          <li
-            key={menu._id}
-            style={{
-              display: "inline-block",
-              width: "200px",
-              margin: "10px",
-              textAlign: "center",
-              border: "1px solid #ddd",
-              padding: "10px",
-              borderRadius: "5px",
-            }}
-          >
-            <img
-              src={menu.imageUrl.startsWith("http") ? menu.imageUrl : `http://localhost:5000${menu.imageUrl}`}
-              alt={menu.name}
-              style={{ width: "100px", height: "100px", display: "block", margin: "0 auto 10px" }}
-            />
-            <h3 style={{ margin: "5px 0" }}>{menu.name}</h3>
-            <p style={{ margin: "5px 0" }}>₹ {menu.price}</p>
-            <p style={{ margin: "5px 0" }}>Category: {menu.category}</p>
-            <p style={{ margin: "5px 0" }}>Stock: {menu.stock}</p>
-            <button onClick={() => handleEdit(menu)} disabled={loading} style={{ marginRight: "5px" }}>
-              Edit
+        {/* Main Content */}
+        <div className="main-content" style={{
+          flex: 1,
+          backgroundColor: "#f5f7fa",
+          padding: "20px",
+          boxSizing: "border-box",
+        }}>
+          {/* Header */}
+          <div style={{
+            backgroundColor: "#2c3e50",
+            padding: "15px 20px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+          }}>
+            <h1 style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              margin: 0,
+              color: "#fff",
+            }}>
+              Welcome to Kore Connect
+            </h1>
+            <button
+              onClick={handleLogout}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#e74c3c",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                fontSize: "14px",
+                cursor: "pointer",
+                transition: "background-color 0.3s",
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = "#c0392b"}
+              onMouseOut={(e) => e.target.style.backgroundColor = "#e74c3c"}
+            >
+              Logout
             </button>
-            <button onClick={() => handleDelete(menu._id)} disabled={loading}>Delete</button>
-          </li>
-        ))}
-      </ul>
+          </div>
+
+          {/* Form Section */}
+          <div className="form-section" style={{
+            backgroundColor: "#fff",
+            padding: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+            marginBottom: "20px",
+          }}>
+            <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "15px", color: "#333" }}>
+              {editingMenu ? "Edit Menu" : "Add New Menu"}
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ddd",
+                  borderRadius: "5px",
+                  fontSize: "14px",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                }}
+              />
+              <input
+                type="text"
+                name="name"
+                placeholder="Name"
+                value={menuData.name}
+                onChange={handleInputChange}
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ddd",
+                  borderRadius: "5px",
+                  fontSize: "14px",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                }}
+              />
+              <input
+                type="number"
+                name="price"
+                placeholder="Price"
+                value={menuData.price}
+                onChange={handleInputChange}
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ddd",
+                  borderRadius: "5px",
+                  fontSize: "14px",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                }}
+              />
+              <input
+                type="text"
+                name="category"
+                placeholder="Category"
+                value={menuData.category}
+                onChange={handleInputChange}
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ddd",
+                  borderRadius: "5px",
+                  fontSize: "14px",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                }}
+              />
+              <input
+                type="number"
+                name="stock"
+                placeholder="Stock"
+                value={menuData.stock}
+                onChange={handleInputChange}
+                style={{
+                  padding: "10px",
+                  border: "1px solid #ddd",
+                  borderRadius: "5px",
+                  fontSize: "14px",
+                  color: "#333",
+                  backgroundColor: "#f9f9f9",
+                }}
+              />
+              {editingMenu ? (
+                <button
+                  onClick={handleUpdate}
+                  disabled={loading}
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#f39c12",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    fontSize: "16px",
+                    cursor: loading ? "not-allowed" : "pointer",
+                    transition: "background-color 0.3s",
+                  }}
+                  onMouseOver={(e) => e.target.style.backgroundColor = "#e67e22"}
+                  onMouseOut={(e) => e.target.style.backgroundColor = "#f39c12"}
+                >
+                  {loading ? "Updating..." : "Update Menu"}
+                </button>
+              ) : (
+                <button
+                  onClick={handleUpload}
+                  disabled={loading}
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#f39c12",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    fontSize: "16px",
+                    cursor: loading ? "not-allowed" : "pointer",
+                    transition: "background-color 0.3s",
+                  }}
+                  onMouseOver={(e) => e.target.style.backgroundColor = "#e67e22"}
+                  onMouseOut={(e) => e.target.style.backgroundColor = "#f39c12"}
+                >
+                  {loading ? "Adding..." : "Add Menu"}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Menu List Section */}
+          <div className="menu-list-section" style={{
+            backgroundColor: "#fff",
+            padding: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+          }}>
+            <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "15px", color: "#333" }}>
+              Menu List
+            </h2>
+            {loading && <p style={{ color: "#666", textAlign: "center" }}>Loading menus...</p>}
+            <div style={{ overflowX: "auto" }}>
+              <table style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: "14px",
+                color: "#333",
+              }}>
+                <thead>
+                  <tr style={{ backgroundColor: "#f39c12", color: "#fff" }}>
+                    <th style={{ padding: "10px", textAlign: "left" }}>Image</th>
+                    <th style={{ padding: "10px", textAlign: "left" }}>Name</th>
+                    <th style={{ padding: "10px", textAlign: "left" }}>Price</th>
+                    <th style={{ padding: "10px", textAlign: "left" }}>Category</th>
+                    <th style={{ padding: "10px", textAlign: "left" }}>Stock</th>
+                    <th style={{ padding: "10px", textAlign: "left" }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {menus.map((menu) => (
+                    <tr key={menu._id} style={{ borderBottom: "1px solid #ddd" }}>
+                      <td style={{ padding: "10px" }}>
+                        <img
+                          src={menu.imageUrl.startsWith("http") ? menu.imageUrl : `http://localhost:5000${menu.imageUrl}`}
+                          alt={menu.name}
+                          style={{ width: "50px", height: "50px", borderRadius: "5px" }}
+                        />
+                      </td>
+                      <td style={{ padding: "10px" }}>{menu.name}</td>
+                      <td style={{ padding: "10px" }}>₹ {menu.price}</td>
+                      <td style={{ padding: "10px" }}>{menu.category}</td>
+                      <td style={{ padding: "10px" }}>{menu.stock}</td>
+                      <td style={{ padding: "10px" }}>
+                        <button
+                          onClick={() => handleEdit(menu)}
+                          disabled={loading}
+                          style={{
+                            padding: "5px 10px",
+                            backgroundColor: "#3498db",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            marginRight: "5px",
+                            cursor: loading ? "not-allowed" : "pointer",
+                            transition: "background-color 0.3s",
+                          }}
+                          onMouseOver={(e) => e.target.style.backgroundColor = "#2980b9"}
+                          onMouseOut={(e) => e.target.style.backgroundColor = "#3498db"}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(menu._id)}
+                          disabled={loading}
+                          style={{
+                            padding: "5px 10px",
+                            backgroundColor: "#e74c3c",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: loading ? "not-allowed" : "pointer",
+                            transition: "background-color 0.3s",
+                          }}
+                          onMouseOver={(e) => e.target.style.backgroundColor = "#c0392b"}
+                          onMouseOut={(e) => e.target.style.backgroundColor = "#e74c3c"}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

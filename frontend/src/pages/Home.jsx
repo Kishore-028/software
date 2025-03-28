@@ -8,7 +8,7 @@ const Home = () => {
       {/* Navbar */}
       <div style={styles.navbar}>
         <div style={styles.logoContainer}>
-          <img src="/logo.png" alt="Kore Connect Logo" style={styles.logo} />
+          <img src="\logo.webp" alt="Kore Connect Logo"/>
           <h1 style={styles.brandName}>Kore Connect</h1>
         </div>
         <div style={styles.navLinks}>

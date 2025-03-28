@@ -12,6 +12,7 @@ import orderRoutes from "./routes/orderRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
+import analyticRoutes from "./routes/analyticRoutes.js";
 
 // Configurations
 dotenv.config();

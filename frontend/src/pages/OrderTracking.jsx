@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "./Layout";
+import Lay from "./Layout1";
 
 const OrderTracking = () => {
   const [orders, setOrders] = useState([]);
@@ -34,6 +35,7 @@ const OrderTracking = () => {
   return (
     <div style={styles.container}>
       <Layout />
+      <Lay>
       <div style={styles.content}>
         <h1 style={styles.heading}>Track Your Order</h1>
         <p style={styles.description}>Check the status of your order in real-time.</p>
@@ -65,6 +67,7 @@ const OrderTracking = () => {
           ))}
         </div>
       </div>
+      </Lay>
     </div>
   );
 };

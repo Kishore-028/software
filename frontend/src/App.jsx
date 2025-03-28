@@ -19,6 +19,8 @@ import Dashboard from "./pages/Dashboard";
 import OrderDetails from "./pages/OrderDetails";
 import UpdateOrderStatus from "./pages/UpdateOrderStatus";
 import OrderSuccess from "./pages/OrderSuccess"; // Import the OrderSuccess page
+import Analytics from "./pages/Analytic"; 
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -71,6 +73,7 @@ function App() {
         <Route path="/core/user/order-tracking" element={<OrderTracking />} />
         <Route path="/core/user/menu" element={<Menu />} />
         <Route path="/core/user/order-success" element={<OrderSuccess />} /> 
+        <Route path="/core/admin/analytics" element={<Analytics />} />
       </Route>
     </Routes>
   );
