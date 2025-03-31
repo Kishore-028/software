@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import logo from '../assets/logo.webp';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -8,12 +9,11 @@ const Home = () => {
       {/* Navbar */}
       <div style={styles.navbar}>
         <div style={styles.logoContainer}>
-          <img src="\logo.webp" alt="Kore Connect Logo"/>
-          <h1 style={styles.brandName}>Kore Connect</h1>
+          <img src={logo} alt="KCT Food Logo" style={styles.logo} />
+          <h1 style={styles.brandName}>KCT Food</h1>
         </div>
         <div style={styles.navLinks}>
           <button style={styles.navButton} onClick={() => navigate("/core/home")}>Home</button>
-          {/* Always Show Login Button */}
           <button style={styles.navButton} onClick={() => navigate("/core/login")}>Login</button>
           <button style={styles.navButton} onClick={() => navigate("/core/signup")}>Signup</button>
           <button style={styles.navButton} onClick={() => navigate("/core/contact")}>Contact</button>
@@ -22,25 +22,26 @@ const Home = () => {
 
       {/* Main Content */}
       <div style={styles.mainContent}>
-        <h2 style={styles.welcomeHeading}>Welcome to Kore Connect</h2>
+        <h2 style={styles.welcomeHeading}>Welcome to KCT Food</h2>
         <p style={styles.description}>
-          Your go-to platform for hassle-free canteen food ordering! Browse the menu, 
-          place your order, and enjoy delicious meals without the wait.
+          KCT's premier food ordering platform! Explore our canteen menu, 
+          order your favorite meals, and savor the taste of convenience 
+          right here at KCT campus.
         </p>
         <button style={styles.getStartedButton} onClick={() => navigate("/core/login")}>
-          Get Started
+          Order Now
         </button>
       </div>
 
       {/* Footer */}
       <footer style={styles.footer}>
-        © 2025 Part +-ner Kore. All rights reserved.
+        © 2025 KCT Food Ordering System. All rights reserved.
       </footer>
     </div>
   );
 };
 
-// Styles (unchanged)
+// Styles
 const styles = {
   container: {
     fontFamily: "Arial, sans-serif",
@@ -62,21 +63,23 @@ const styles = {
   logoContainer: {
     display: "flex",
     alignItems: "center",
+    gap: "10px", // Added spacing between logo and text
   },
   logo: {
-    width: "40px",
-    height: "40px",
-    borderRadius: "50%",
-    marginRight: "10px",
+    width: "40px", // Added specific width
+    height: "40px", // Added specific height
+    objectFit: "contain", // Ensures logo maintains aspect ratio
   },
   brandName: {
     color: "white",
     fontSize: "22px",
     fontWeight: "bold",
+    margin: 0, // Remove default margin
   },
   navLinks: {
     display: "flex",
     gap: "20px",
+    alignItems: "center", // Ensure buttons align vertically
   },
   navButton: {
     background: "transparent",
@@ -86,16 +89,19 @@ const styles = {
     cursor: "pointer",
     textTransform: "capitalize",
     fontWeight: "bold",
+    padding: "8px 12px", // Added padding for better click area
   },
   mainContent: {
     padding: "50px 20px",
     maxWidth: "600px",
     margin: "0 auto",
+    flex: 1, // Allow main content to take available space
   },
   welcomeHeading: {
     fontSize: "28px",
     fontWeight: "bold",
     color: "#333",
+    marginBottom: "20px", // Added spacing
   },
   description: {
     fontSize: "16px",

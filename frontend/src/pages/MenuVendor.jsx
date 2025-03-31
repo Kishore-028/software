@@ -8,28 +8,32 @@ const Menu = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [menuItems, setMenuItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch menu items from MongoDB (backend)
   useEffect(() => {
     axios
       .get("http://localhost:5000/menus/getmenu")
       .then((response) => {
         setMenuItems(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching menu data:", error);
+        setError("Failed to load menu items.");
+        setLoading(false);
       });
   }, []);
 
-  // Function to get the image URL
-  const getImageUrl = (imageUrl) => {
-    if (imageUrl.startsWith("http")) {
-      return imageUrl;
-    }
-    return `http://localhost:5000${imageUrl}`;
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
 
-  // Filter menu items based on category and search query
+  const getImageUrl = (imageUrl) => {
+    if (!imageUrl) return "https://via.placeholder.com/150";
+    return imageUrl.startsWith("http") ? imageUrl : `http://localhost:5000${imageUrl}`;
+  };
+
   const filteredItems = menuItems.filter(
     (item) =>
       (selectedCategory === "All" || item.category === selectedCategory) &&
@@ -39,19 +43,15 @@ const Menu = () => {
   return (
     <div style={styles.container}>
       <Layout />
-      <div style={styles.content}>
+      <div style={styles.mainContent}>
         <h1 style={styles.heading}>Canteen Menu</h1>
-
-        {/* Search Bar */}
         <input
           type="text"
           placeholder="Search for meals..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={handleSearchChange}
           style={styles.searchBar}
         />
-
-        {/* Category Filters */}
         <div style={styles.filterContainer}>
           <span style={styles.filterLabel}>Filter by Category:</span>
           {categories.map((category) => (
@@ -60,49 +60,54 @@ const Menu = () => {
               onClick={() => setSelectedCategory(category)}
               style={{
                 ...styles.filterButton,
-                backgroundColor:
-                  selectedCategory === category ? "#d1d5db" : "#f3f4f6",
+                backgroundColor: selectedCategory === category ? "#d1d5db" : "#f3f4f6",
               }}
             >
               {category}
             </button>
           ))}
         </div>
-
-        {/* Menu Items Grid */}
-        <div style={styles.grid}>
-          {filteredItems.map((item) => (
-            <div key={item._id} style={styles.card}>
-              <img
-                src={getImageUrl(item.imageUrl)}
-                alt={item.name}
-                style={styles.image}
-              />
-              <h3>{item.name}</h3>
-              <p>₹ {item.price}</p>
-              <p>Category: {item.category}</p>
-              <p>Stock: {item.stock}</p>
-              <button style={styles.cartButton}>Add to Cart</button>
-            </div>
-          ))}
-        </div>
+        {loading && <p style={styles.loadingText}>Loading menu items...</p>}
+        {error && <p style={styles.errorText}>{error}</p>}
+        {!loading && !error && (
+          <div style={styles.grid}>
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item) => (
+                <MenuItemCard key={item._id} item={item} getImageUrl={getImageUrl} />
+              ))
+            ) : (
+              <p style={styles.noItemsText}>No menu items found.</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-// Inline CSS Styles (unchanged)
+const MenuItemCard = ({ item, getImageUrl }) => {
+  return (
+    <div style={styles.card}>
+      <img src={getImageUrl(item.imageUrl)} alt={item.name} style={styles.image} />
+      <h3>{item.name}</h3>
+      <p>₹ {item.price}</p>
+      <p>Category: {item.category}</p>
+      <p>Stock: {item.stock}</p>
+      <button style={styles.cartButton}>Add to Cart</button>
+    </div>
+  );
+};
+
 const styles = {
   container: {
-    textAlign: "center",
+    display: "flex",
     minHeight: "100vh",
     backgroundColor: "#f8f9fa",
-    paddingTop: "20px",
   },
-  content: {
-    maxWidth: "1100px",
-    margin: "0 auto",
+  mainContent: {
+    flexGrow: 1,
     padding: "20px",
+    textAlign: "center",
   },
   heading: {
     fontSize: "2rem",
@@ -111,7 +116,7 @@ const styles = {
     marginBottom: "10px",
   },
   searchBar: {
-    width: "100%",
+    width: "60%",
     padding: "10px",
     fontSize: "1rem",
     borderRadius: "5px",
@@ -151,7 +156,6 @@ const styles = {
     height: "150px",
     objectFit: "cover",
     borderRadius: "5px",
-    marginBottom: "10px",
   },
   cartButton: {
     backgroundColor: "#28a745",
@@ -160,6 +164,22 @@ const styles = {
     borderRadius: "5px",
     border: "none",
     cursor: "pointer",
+    transition: "background 0.2s ease-in-out",
+  },
+  loadingText: {
+    fontSize: "1.2rem",
+    color: "#1d1d1f",
+    padding: "1rem",
+  },
+  errorText: {
+    fontSize: "1.2rem",
+    color: "#e74c3c",
+    padding: "1rem",
+  },
+  noItemsText: {
+    fontSize: "1.2rem",
+    color: "#6e6e73",
+    padding: "2rem 0",
   },
 };
 

@@ -52,6 +52,7 @@ function App() {
       <Route path="/core/admin/dashboard" element={<Dashboard />} />
       <Route path="/core/admin/vendormenu" element={<MenuVendor />} />
       <Route path="/core/admin/home" element={<HomeAdmin />} />
+      <Route path="/core/admin/analytics" element={<Analytics />} />
       
 
       {/* Protected Routes (Require Login) */}
@@ -73,7 +74,7 @@ function App() {
         <Route path="/core/user/order-tracking" element={<OrderTracking />} />
         <Route path="/core/user/menu" element={<Menu />} />
         <Route path="/core/user/order-success" element={<OrderSuccess />} /> 
-        <Route path="/core/admin/analytics" element={<Analytics />} />
+        
       </Route>
     </Routes>
   );

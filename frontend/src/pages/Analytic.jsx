@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Bar, Pie, Doughnut, Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
-import Layout from "./Layout";
+import Layout from "./LayoutAdmin";
 
 
 const Analytics = () => {
